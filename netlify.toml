@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+  command = "echo 'No build command needed for static site'"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
