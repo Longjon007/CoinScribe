@@ -11,5 +11,20 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    // Enable code splitting for better caching
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate vendor chunks for better caching
+          'react-vendor': ['react', 'react-dom'],
+          'chart-vendor': ['recharts'],
+        },
+      },
+    },
+    // Warn about chunk sizes
+    chunkSizeWarningLimit: 600,
+    // Enable minification with esbuild (faster than terser)
+    minify: 'esbuild',
+    target: 'es2015',
   },
 })
