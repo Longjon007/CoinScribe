@@ -1,0 +1,32 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[dev]
+  command = "npm run dev"
+  port = 8888
+  targetPort = 5173
+  autoLaunch = false
+
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+
+[[plugins]]
+  package = "@sentry/netlify-build-plugin"
+
+[build.environment]
+  NODE_VERSION = "22.21.1"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
