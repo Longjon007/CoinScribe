@@ -9,12 +9,6 @@
   targetPort = 5173
   autoLaunch = false
 
-[[plugins]]
-  package = "@netlify/plugin-lighthouse"
-
-[[plugins]]
-  package = "@sentry/netlify-build-plugin"
-
 [build.environment]
   NODE_VERSION = "22.21.1"
 
