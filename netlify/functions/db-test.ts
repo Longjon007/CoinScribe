@@ -14,12 +14,15 @@ function getSql(): NeonQueryFunction<false, false> {
 // Simple in-memory rate limiter (for production, consider Redis or similar)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
+// Configuration constants
+const MAX_RATE_LIMIT_ENTRIES = 10000; // Maximum entries before cleanup
+
 function checkRateLimit(ip: string, maxRequests = 60, windowMs = 60000): boolean {
   const now = Date.now();
   const record = rateLimitMap.get(ip);
   
   // Clean up old entries periodically to prevent memory leaks
-  if (rateLimitMap.size > 10000) {
+  if (rateLimitMap.size > MAX_RATE_LIMIT_ENTRIES) {
     const cutoff = now - windowMs;
     for (const [key, value] of rateLimitMap.entries()) {
       if (value.resetTime < cutoff) {

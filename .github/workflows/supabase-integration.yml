@@ -46,15 +46,8 @@ jobs:
             echo "Supabase CLI already installed: $(supabase --version)"
           fi
 
-      - name: Validate Supabase Configuration
-        run: |
-          if [ -z "${{ secrets.SUPABASE_ACCESS_TOKEN }}" ]; then
-            echo "Warning: SUPABASE_ACCESS_TOKEN not set. Skipping database operations."
-            exit 0
-          fi
-
       - name: Sync Database Schema
-        if: success()
+        if: env.SUPABASE_ACCESS_TOKEN != ''
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
