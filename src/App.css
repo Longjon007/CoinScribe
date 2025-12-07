@@ -15,7 +15,7 @@
 .header h1 {
   font-size: 3rem;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -23,7 +23,7 @@
 
 .header p {
   font-size: 1.2rem;
-  color: #888;
+  color: var(--color-text-secondary);
 }
 
 .main {
@@ -37,16 +37,37 @@
 }
 
 .coin-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  /* Optimize animation performance */
+  transition: transform 0.2s ease-out;
+  position: relative;
+  /* Hint browser for upcoming transform */
+  will-change: transform;
+}
+
+/* Use pseudo-element for shadow to avoid expensive repaints */
+.coin-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .coin-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  will-change: auto;
+}
+
+.coin-card:hover::after {
+  opacity: 1;
 }
 
 .coin-info {
@@ -61,7 +82,7 @@
 }
 
 .symbol {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-border);
   padding: 0.25rem 0.75rem;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -87,13 +108,13 @@
 }
 
 .change.positive {
-  color: #4ade80;
-  background: rgba(74, 222, 128, 0.1);
+  color: var(--color-positive);
+  background: var(--color-positive-bg);
 }
 
 .change.negative {
-  color: #f87171;
-  background: rgba(248, 113, 113, 0.1);
+  color: var(--color-negative);
+  background: var(--color-negative-bg);
 }
 
 .loading, .error {
@@ -103,15 +124,15 @@
 }
 
 .error {
-  color: #f87171;
+  color: var(--color-negative);
 }
 
 .footer {
   margin-top: 3rem;
   text-align: center;
-  color: #666;
+  color: var(--color-text-tertiary);
   padding: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--color-border);
 }
 
 @media (max-width: 768px) {

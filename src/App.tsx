@@ -16,26 +16,40 @@ function App() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    const abortController = new AbortController()
+    
     // This is a placeholder - in production, you would fetch from your Netlify function
     // that connects to CoinGecko or similar crypto API
     const fetchCoins = async () => {
       try {
         // Simulate API call - replace with actual fetch in production
+        // When implementing real API: const response = await fetch(url, { signal: abortController.signal })
         const mockCoins: Coin[] = [
           { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', current_price: 45000, price_change_percentage_24h: 2.5 },
           { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', current_price: 3000, price_change_percentage_24h: -1.2 },
           { id: 'cardano', symbol: 'ADA', name: 'Cardano', current_price: 0.5, price_change_percentage_24h: 5.7 },
         ]
         
-        setCoins(mockCoins)
-        setLoading(false)
+        // Only update state if not aborted
+        if (!abortController.signal.aborted) {
+          setCoins(mockCoins)
+          setLoading(false)
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch coins')
-        setLoading(false)
+        // Only update state if not aborted
+        if (!abortController.signal.aborted) {
+          setError(err instanceof Error ? err.message : 'Failed to fetch coins')
+          setLoading(false)
+        }
       }
     }
 
     fetchCoins()
+    
+    // Cleanup function to abort fetch on unmount
+    return () => {
+      abortController.abort()
+    }
   }, [])
 
   // Memoize formatted coin data to avoid recalculating on every render
