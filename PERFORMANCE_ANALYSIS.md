@@ -746,6 +746,29 @@ export default async (req: Request, context: Context) => {
 
 ---
 
+## 9. Security Vulnerabilities
+
+### Issue 9.1: Arbitrary File Write via artifact extraction (CVE)
+**Location**: `.github/workflows/deploy.yml` line 67  
+**Severity**: HIGH  
+**Description**: The `actions/download-artifact@v4` action has a vulnerability allowing arbitrary file writes during artifact extraction.
+
+**Vulnerable Code**:
+```yaml
+- name: Download build artifacts
+  uses: actions/download-artifact@v4  # Vulnerable
+```
+
+**Fixed Code**:
+```yaml
+- name: Download build artifacts
+  uses: actions/download-artifact@v4.1.3  # Patched version
+```
+
+**Impact**: Prevents potential arbitrary file write attacks during artifact extraction in CI/CD pipeline.
+
+---
+
 ## Conclusion
 
 This analysis identified **20+ performance improvement opportunities** across React components, CSS, build configuration, GitHub Actions, and API functions. Implementing the high and medium priority items will result in:
@@ -755,5 +778,6 @@ This analysis identified **20+ performance improvement opportunities** across Re
 - **Better reliability** with error boundaries and rate limiting
 - **Improved user experience** with abort controllers and proper error handling
 - **Future-proof architecture** ready for real API integration
+- **Enhanced security** with patched dependencies and proper permission controls
 
 The codebase already has good foundations with memoization and code splitting. These recommendations build upon that solid base to create a production-ready, high-performance application.

@@ -324,6 +324,7 @@ Added CSS custom properties for:
 4. **Security Headers**: Added CSP, X-Frame-Options, etc. in netlify.toml
 5. **GitHub Actions Permissions**: Explicitly limited GITHUB_TOKEN permissions
 6. **Secret Handling**: Fixed secret checking to prevent log exposure
+7. **Dependency Vulnerability Fix**: Patched actions/download-artifact to v4.1.3 (fixes arbitrary file write CVE)
 
 ---
 
