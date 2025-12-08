@@ -1,42 +1,3 @@
-#!/bin/bash
-
-# ==============================================================================
-# Script Name: CoinScribe Auto-Tagging Setup
-#
-# Description:
-#   This script automates the setup of a GitHub Actions workflow for semantic
-#   versioning. It generates a workflow file located at
-#   .github/workflows/auto-tag.yml. This workflow is triggered on pushes to the
-#   main branch (specifically PR merges) and automatically calculates the next
-#   version tag based on commit messages, pushes the tag, and creates a GitHub
-#   Release.
-#
-# Usage:
-#   Run this script from the root of the repository to generate the workflow file.
-#   bash Cli
-#   or
-#   ./Cli (after chmod +x Cli)
-#
-# Generated Workflow Details:
-#   File: .github/workflows/auto-tag.yml
-#   Triggers:
-#     - Push to 'main' branch.
-#     - workflow_dispatch (manual trigger).
-#   Process:
-#     1. Checkout code and fetch tags.
-#     2. Determine the latest tag.
-#     3. Analyze commit messages since the last tag to determine the bump level:
-#        - [bump:major] -> Major version bump
-#        - [bump:minor] -> Minor version bump
-#        - [skip-bump]  -> Skip tagging
-#        - Default      -> Patch version bump
-#     4. Compute the next version number.
-#     5. Push the new tag to the repository.
-#     6. Create a GitHub Release with generated notes.
-# ==============================================================================
-
-mkdir -p .github/workflows
-cat > .github/workflows/auto-tag.yml <<'YAML'
 name: Auto Tag on PR Merge
 
 on:
@@ -152,4 +113,3 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-YAML
