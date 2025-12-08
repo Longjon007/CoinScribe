@@ -162,7 +162,7 @@ class MarketDataLoader:
         )
         
         # Fill NaN values
-        df.fillna(method='ffill', inplace=True)
+        df.ffill(inplace=True)
         df.fillna(0, inplace=True)
         
         return df

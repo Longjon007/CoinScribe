@@ -7,7 +7,7 @@ Handles inference and prediction using trained AI models.
 
 import torch
 import numpy as np
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from pathlib import Path
 import logging
 
@@ -125,7 +125,7 @@ class AIIndexPredictor:
         self,
         df,
         sequence_length: int = None
-    ) -> Dict[str, any]:
+    ) -> Dict[str, Any]:
         """
         Make predictions from a pandas DataFrame.
         
@@ -174,7 +174,7 @@ class AIIndexPredictor:
         self,
         symbols: List[str],
         data_loader
-    ) -> Dict[str, any]:
+    ) -> Dict[str, Any]:
         """
         Predict indices for the next time step based on latest market data.
         
@@ -218,7 +218,7 @@ class AIIndexPredictor:
         
         return float(np.clip(confidence, 0, 1))
     
-    def get_model_info(self) -> Dict[str, any]:
+    def get_model_info(self) -> Dict[str, Any]:
         """
         Get information about the loaded model.
         
