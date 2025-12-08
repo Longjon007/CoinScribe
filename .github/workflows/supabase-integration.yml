@@ -1,11 +1,9 @@
 name: Supabase Integration
 
-# This is a placeholder workflow for integrating Supabase database setup with the given branch configurations.
-
 on:
   push:
     branches:
-      - "*" # Trigger on all branches (customize as necessary)
+      - "*"
 
 jobs:
   setup-database:
@@ -16,10 +14,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Supabase CLI
+      - name: Set up Node.js and Supabase CLI
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Supabase CLI via npm
         run: |
-          # Install Supabase CLI
-          curl -fsSL https://deb.supabase.com/install.sh | sh
+          npm install -g supabase@latest
+          supabase --version
 
       - name: Sync branch configurations (cf5645f086b50e1e71fba0b7a84debc46698c2af)
         run: |
