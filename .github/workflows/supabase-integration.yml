@@ -16,10 +16,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Supabase CLI
+      - name: Install Supabase CLI
         run: |
-          # Install Supabase CLI
-          curl -fsSL https://deb.supabase.com/install.sh | sh
+          set -e
+          wget https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz
+          tar -xf supabase_linux_amd64.tar.gz
+          chmod +x supabase
+          sudo mv supabase /usr/local/bin
+          supabase --version
 
       - name: Sync branch configurations (cf5645f086b50e1e71fba0b7a84debc46698c2af)
         run: |
