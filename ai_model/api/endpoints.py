@@ -7,16 +7,30 @@ Flask-based REST API for interacting with the AI model.
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from typing import Dict
+from typing import Dict, Optional
 import logging
 import traceback
 
-from ..models.inference.predictor import AIIndexPredictor
-from ..data.pipelines.data_loader import MarketDataLoader
 from ..config import config
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+try:
+    from ..models.inference.predictor import AIIndexPredictor
+except Exception as exc:  # pragma: no cover - import-time failures handled
+    AIIndexPredictor = None
+    _PREDICTOR_IMPORT_ERROR = exc
+else:
+    _PREDICTOR_IMPORT_ERROR = None
+
+try:
+    from ..data.pipelines.data_loader import MarketDataLoader
+except Exception as exc:  # pragma: no cover - import-time failures handled
+    MarketDataLoader = None
+    _DATA_LOADER_IMPORT_ERROR = exc
+else:
+    _DATA_LOADER_IMPORT_ERROR = None
 
 
 def create_app(config_obj=None) -> Flask:
