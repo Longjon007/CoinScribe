@@ -16,10 +16,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Supabase CLI
-        run: |
-          # Install Supabase CLI
-          curl -fsSL https://deb.supabase.com/install.sh | sh
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Supabase CLI
+        run: npm install -g supabase@latest
+
+      - name: Verify Supabase CLI
+        run: supabase --version
 
       - name: Sync branch configurations (cf5645f086b50e1e71fba0b7a84debc46698c2af)
         run: |
