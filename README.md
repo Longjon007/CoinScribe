@@ -22,6 +22,11 @@ This will start the Vite development server on http://localhost:5173
 
 For detailed debugging instructions, see [DEBUG.md](DEBUG.md).
 
+To validate your debug setup:
+```bash
+node scripts/validate-debug-setup.js
+```
+
 Quick start:
 1. Open the project in VS Code
 2. Press F5 to start debugging

@@ -11,6 +11,20 @@ This document explains how to debug the CoinScribe application during developmen
 - Chrome or Edge browser (for frontend debugging)
 - The application source code (merge from `copilot/build-and-publish-coinscribe` or similar branches)
 
+## Validating Your Setup
+
+Before you start debugging, you can validate that everything is configured correctly:
+
+```bash
+node scripts/validate-debug-setup.js
+```
+
+This script will check:
+- All required configuration files exist
+- JSON files are valid
+- Debug configurations are properly set up
+- Whether application code is present
+
 ## Quick Start
 
 ### Option 1: Using VS Code (Recommended)
