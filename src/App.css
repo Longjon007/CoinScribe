@@ -1,0 +1,146 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--color-gradient-start) 0%, var(--color-gradient-end) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header p {
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+}
+
+.main {
+  flex: 1;
+}
+
+.coin-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.coin-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  /* Optimize animation performance */
+  transition: transform 0.2s ease-out;
+  position: relative;
+  /* Hint browser for upcoming transform */
+  will-change: transform;
+}
+
+/* Use pseudo-element for shadow to avoid expensive repaints */
+.coin-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.coin-card:hover {
+  transform: translateY(-4px);
+  will-change: auto;
+}
+
+.coin-card:hover::after {
+  opacity: 1;
+}
+
+.coin-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.coin-info h2 {
+  font-size: 1.5rem;
+}
+
+.symbol {
+  background: var(--color-border);
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.coin-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.change {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+}
+
+.change.positive {
+  color: var(--color-positive);
+  background: var(--color-positive-bg);
+}
+
+.change.negative {
+  color: var(--color-negative);
+  background: var(--color-negative-bg);
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.5rem;
+}
+
+.error {
+  color: var(--color-negative);
+}
+
+.footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  padding: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .coin-list {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+}
