@@ -237,9 +237,20 @@ class ModelTrainer:
         """
         checkpoint_path = self.checkpoint_dir / filename
         
+        # Save model architecture parameters along with the checkpoint
+        # This ensures the model can be loaded correctly regardless of config
+        model_config = {
+            'input_features': self.model.lstm.input_size,
+            'hidden_size': self.model.hidden_size,
+            'num_layers': self.model.num_layers,
+            'output_size': self.model.fc_layers[-1].out_features,
+            'dropout': self.model.fc_layers[2].p if hasattr(self.model.fc_layers[2], 'p') else 0.2
+        }
+        
         torch.save({
             'epoch': self.epoch,
             'model_state_dict': self.model.state_dict(),
+            'model_config': model_config,
             'optimizer_state_dict': self.optimizer.state_dict(),
             'scheduler_state_dict': self.scheduler.state_dict(),
             'train_losses': self.train_losses,

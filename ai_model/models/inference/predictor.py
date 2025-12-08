@@ -78,13 +78,21 @@ class AIIndexPredictor:
             # Load checkpoint
             checkpoint = torch.load(self.model_path, map_location=self.device)
             
-            # Initialize model
+            # Get model architecture from checkpoint if available, otherwise use config
+            # This ensures compatibility with models trained with different configs
+            model_config = checkpoint.get('model_config', {})
+            
             model = AIIndexModel(
-                input_features=self.config.get('model', {}).get('input_features', 32),
-                hidden_size=self.config.get('model', {}).get('hidden_size', 128),
-                num_layers=self.config.get('model', {}).get('num_layers', 2),
-                output_size=self.config.get('model', {}).get('output_size', 10),
-                dropout=self.config.get('model', {}).get('dropout', 0.2)
+                input_features=model_config.get('input_features', 
+                    self.config.get('model', {}).get('input_features', 32)),
+                hidden_size=model_config.get('hidden_size',
+                    self.config.get('model', {}).get('hidden_size', 128)),
+                num_layers=model_config.get('num_layers',
+                    self.config.get('model', {}).get('num_layers', 2)),
+                output_size=model_config.get('output_size',
+                    self.config.get('model', {}).get('output_size', 10)),
+                dropout=model_config.get('dropout',
+                    self.config.get('model', {}).get('dropout', 0.2))
             )
             
             # Load weights

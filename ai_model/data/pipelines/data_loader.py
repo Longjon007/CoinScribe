@@ -162,7 +162,7 @@ class MarketDataLoader:
         )
         
         # Fill NaN values
-        df.fillna(method='ffill', inplace=True)
+        df.ffill(inplace=True)
         df.fillna(0, inplace=True)
         
         return df
@@ -183,8 +183,15 @@ class MarketDataLoader:
         gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
         
-        rs = gain / loss
+        # Handle division by zero: when loss is 0, RSI is 100 (all gains)
+        # When both are 0, RSI is 50 (neutral)
+        rs = gain / loss.replace(0, np.nan)
         rsi = 100 - (100 / (1 + rs))
+        
+        # Fill NaN values: where loss was 0, set RSI to 100 (all gains)
+        # If gain is also 0, set to 50 (neutral)
+        rsi = rsi.fillna(100)
+        rsi = rsi.where((gain != 0) | (loss != 0), 50)
         
         return rsi
     
