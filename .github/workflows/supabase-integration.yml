@@ -18,8 +18,9 @@ jobs:
 
       - name: Install Supabase CLI
         run: |
+          set -e
           wget https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz
-          tar -xvf supabase_linux_amd64.tar.gz
+          tar -xf supabase_linux_amd64.tar.gz
           chmod +x supabase
           sudo mv supabase /usr/local/bin
           supabase --version
