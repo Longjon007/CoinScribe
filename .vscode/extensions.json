@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "msjsdiag.debugger-for-chrome",
+    "msjsdiag.vscode-react-native"
+  ]
+}
