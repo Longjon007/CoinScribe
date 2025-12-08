@@ -5,13 +5,22 @@ AI Index Predictor
 Handles inference and prediction using trained AI models.
 """
 
-import torch
-import numpy as np
-from typing import Dict, List, Optional
-from pathlib import Path
-import logging
+from __future__ import annotations
 
-from ..training.model_architecture import AIIndexModel
+import logging
+from pathlib import Path
+from typing import Dict, List, Optional
+
+import numpy as np
+
+try:
+    import torch  # type: ignore
+except ModuleNotFoundError as exc:  # pragma: no cover - handled gracefully
+    torch = None  # type: ignore
+    _TORCH_IMPORT_ERROR = exc
+else:  # pragma: no cover - import success path
+    _TORCH_IMPORT_ERROR = None
+
 from ...data.pipelines.preprocessor import DataPreprocessor
 
 logging.basicConfig(level=logging.INFO)
@@ -35,6 +44,13 @@ class AIIndexPredictor:
             config: Model configuration
             device: Device to run inference on
         """
+        if torch is None:
+            raise ImportError(
+                "PyTorch is required for AIIndexPredictor but is not installed. "
+                "Install it by running `pip install torch --index-url "
+                "https://download.pytorch.org/whl/cpu`."
+            ) from _TORCH_IMPORT_ERROR
+
         self.config = config
         self.model_path = Path(model_path)
         
@@ -53,13 +69,14 @@ class AIIndexPredictor:
         
         logger.info(f"Predictor initialized on {self.device}")
     
-    def _load_model(self) -> AIIndexModel:
+    def _load_model(self):
         """
         Load trained model from checkpoint.
         
         Returns:
             Loaded model
         """
+        from ..training.model_architecture import AIIndexModel
         if not self.model_path.exists():
             logger.warning(f"Model checkpoint not found at {self.model_path}")
             logger.warning("Initializing new model (untrained)")
