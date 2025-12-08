@@ -53,32 +53,51 @@ def create_app(config_obj=None) -> Flask:
     cors_origins = config_obj.get('api.cors_origins', ['*'])
     CORS(app, origins=cors_origins)
     
-    # Initialize components
-    try:
+    # Initialize components defensively so health checks succeed even when optional
+    # ML dependencies (torch, yfinance, etc.) are missing in the current environment.
+    component_errors = {}
+    predictor = None
+    data_loader = None
+
+    if AIIndexPredictor is None:
+        component_errors['predictor_import'] = str(_PREDICTOR_IMPORT_ERROR)
+    else:
         model_path = config_obj.get('serving.model_path', 'ai_model/models/checkpoints/best_model.pth')
-        predictor = AIIndexPredictor(
-            model_path=model_path,
-            config=config_obj._config
-        )
-        data_loader = MarketDataLoader(config_obj._config)
-        
-        app.predictor = predictor
-        app.data_loader = data_loader
-        
-        logger.info("API components initialized successfully")
-    except Exception as e:
-        logger.error(f"Error initializing API components: {str(e)}")
-        app.predictor = None
-        app.data_loader = None
+        try:
+            predictor = AIIndexPredictor(
+                model_path=model_path,
+                config=config_obj._config
+            )
+            logger.info("Predictor initialized successfully")
+        except Exception as exc:
+            component_errors['predictor_init'] = str(exc)
+            logger.warning("Predictor initialization skipped: %s", exc)
+
+    if MarketDataLoader is None:
+        component_errors['data_loader_import'] = str(_DATA_LOADER_IMPORT_ERROR)
+    else:
+        try:
+            data_loader = MarketDataLoader(config_obj._config)
+            logger.info("Data loader initialized successfully")
+        except Exception as exc:
+            component_errors['data_loader_init'] = str(exc)
+            logger.warning("Data loader initialization skipped: %s", exc)
+
+    app.predictor = predictor
+    app.data_loader = data_loader
+    app.component_errors = component_errors
     
     # Define routes
     
     @app.route('/health', methods=['GET'])
     def health_check():
         """Health check endpoint."""
+        status = 'healthy' if not app.component_errors else 'degraded'
         return jsonify({
-            'status': 'healthy',
+            'status': status,
             'model_loaded': app.predictor is not None,
+            'data_loader_ready': app.data_loader is not None,
+            'errors': app.component_errors,
             'version': '0.1.0'
         }), 200
     
