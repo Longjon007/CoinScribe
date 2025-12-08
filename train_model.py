@@ -14,8 +14,10 @@ import argparse
 import sys
 from pathlib import Path
 
-# Add ai_model to path
-sys.path.insert(0, str(Path(__file__).parent))
+# Ensure we can import from the current directory
+# This allows the script to be run from anywhere
+if __name__ == '__main__':
+    sys.path.insert(0, str(Path(__file__).parent))
 
 from ai_model.config import config
 from ai_model.models.training.model_architecture import AIIndexModel
