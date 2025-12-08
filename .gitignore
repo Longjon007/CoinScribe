@@ -1,0 +1,101 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# PyTorch
+*.pth
+*.pt
+*.ckpt
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+ai_model/logs/
+
+# Model checkpoints and data
+ai_model/models/checkpoints/*.pth
+ai_model/models/checkpoints/*.pt
+ai_model/models/checkpoints/*.ckpt
+ai_model/models/checkpoints/training_history.json
+ai_model/models/checkpoints/training_history.png
+ai_model/models/checkpoints/*.pkl
+
+# Data files
+ai_model/data/raw/*
+ai_model/data/processed/*
+*.csv
+*.parquet
+*.h5
+*.hdf5
+
+# TensorBoard
+runs/
+tensorboard/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep directory structure but ignore content
+!ai_model/models/checkpoints/.gitkeep
+!ai_model/data/raw/.gitkeep
+!ai_model/data/processed/.gitkeep
+!ai_model/logs/.gitkeep

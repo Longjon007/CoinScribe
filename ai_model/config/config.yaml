@@ -1,0 +1,63 @@
+# CoinScribe AI Model Configuration
+
+# Model Configuration
+model:
+  architecture: "lstm"  # LSTM for time series prediction
+  input_features: 32
+  hidden_size: 128
+  num_layers: 2
+  output_size: 10  # Number of indices to predict
+  dropout: 0.2
+  
+# Training Configuration
+training:
+  batch_size: 32
+  learning_rate: 0.001
+  epochs: 100
+  validation_split: 0.2
+  early_stopping_patience: 10
+  checkpoint_dir: "ai_model/models/checkpoints"
+  
+# Data Configuration
+data:
+  sequence_length: 60  # 60 time steps for LSTM input
+  features:
+    - "open"
+    - "high"
+    - "low"
+    - "close"
+    - "volume"
+    - "market_cap"
+    - "sentiment_score"  # News sentiment
+  target: "index_value"
+  normalize: true
+  
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 5000
+  debug: false
+  cors_origins: ["*"]
+  
+# Data Sources
+data_sources:
+  market_data:
+    provider: "yfinance"
+    symbols:
+      - "BTC-USD"
+      - "ETH-USD"
+      - "BNB-USD"
+      - "ADA-USD"
+      - "SOL-USD"
+    interval: "1h"
+    period: "1y"
+  
+  news_data:
+    enabled: true
+    sentiment_analysis: true
+    
+# Model Serving
+serving:
+  model_path: "ai_model/models/checkpoints/best_model.pth"
+  cache_predictions: true
+  cache_ttl: 300  # 5 minutes
