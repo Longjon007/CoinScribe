@@ -2,11 +2,14 @@
 
 This document explains how to debug the CoinScribe application during development.
 
+> **Note**: This debug configuration is ready for use once the application source code is merged from the development branches. The configuration supports React + TypeScript + Vite applications.
+
 ## Prerequisites
 
 - Node.js 18.0.0 or higher
 - VS Code (recommended) or another IDE with debugging support
 - Chrome or Edge browser (for frontend debugging)
+- The application source code (merge from `copilot/build-and-publish-coinscribe` or similar branches)
 
 ## Quick Start
 
@@ -37,11 +40,16 @@ Launches the React application in Chrome with full debugging support. This is th
 ### Debug CoinScribe in Edge
 Same as Chrome but uses Microsoft Edge browser.
 
-### Debug Netlify Functions
-Launches Netlify Functions in debug mode, allowing you to debug serverless function code. Use this when working on the backend API.
+### Debug Netlify Functions (requires netlify-cli)
+Launches Netlify Functions in debug mode using the Netlify CLI, allowing you to debug serverless function code. 
 
-### Debug Full Stack
-A compound configuration that launches both the frontend and Netlify Functions simultaneously, perfect for full-stack debugging.
+**Prerequisites**: Install Netlify CLI if you plan to debug Netlify Functions:
+```bash
+npm install -g netlify-cli
+```
+
+### Debug Full Stack (requires netlify-cli)
+A compound configuration that launches both the frontend and Netlify Functions simultaneously, perfect for full-stack debugging. Requires Netlify CLI to be installed.
 
 ## Development Scripts
 
@@ -65,9 +73,12 @@ A compound configuration that launches both the frontend and Netlify Functions s
 
 ### Backend Debugging
 
-1. **Netlify Functions**: When debugging serverless functions, make sure to run them with `npm run dev:functions` if that script exists, or use the Netlify CLI.
+1. **Netlify Functions**: When debugging serverless functions, use the "Debug Netlify Functions" configuration which runs `netlify dev`. Make sure you have the Netlify CLI installed:
+   ```bash
+   npm install -g netlify-cli
+   ```
 
-2. **Environment Variables**: Check that all required environment variables are set in your `.env` file.
+2. **Environment Variables**: Check that all required environment variables are set in your `.env` file or in the Netlify dashboard.
 
 ### Common Issues
 

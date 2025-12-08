@@ -22,18 +22,21 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug Netlify Functions",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev:functions"],
+      "name": "Debug Netlify Functions (requires netlify-cli)",
+      "program": "${workspaceFolder}/node_modules/.bin/netlify",
+      "args": ["dev"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "NODE_ENV": "development"
+      }
     }
   ],
   "compounds": [
     {
-      "name": "Debug Full Stack",
-      "configurations": ["Debug CoinScribe in Chrome", "Debug Netlify Functions"],
+      "name": "Debug Full Stack (requires netlify-cli)",
+      "configurations": ["Debug CoinScribe in Chrome", "Debug Netlify Functions (requires netlify-cli)"],
       "stopAll": true
     }
   ]
