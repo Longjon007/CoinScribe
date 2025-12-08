@@ -161,11 +161,13 @@ class AIIndexPredictor:
         predictions = self.predict(input_data)
         
         # Format output
+        timestamp = self._extract_timestamp(df)
+
         result = {
             'indices': predictions[0].tolist(),
             'index_names': [f"Index_{i+1}" for i in range(len(predictions[0]))],
             'confidence': self._calculate_confidence(predictions[0]),
-            'timestamp': df.index[-1] if hasattr(df, 'index') else None
+            'timestamp': timestamp
         }
         
         return result
@@ -217,6 +219,45 @@ class AIIndexPredictor:
         confidence = 1.0 / (1.0 + variance)
         
         return float(np.clip(confidence, 0, 1))
+
+    def _extract_timestamp(self, df) -> Optional[str]:
+        """
+        Extract the most relevant timestamp value from the provided dataframe.
+        Prefers explicit time columns and falls back to the dataframe index.
+        """
+        timestamp_columns = [
+            'Datetime', 'datetime', 'Date', 'date',
+            'timestamp', 'Timestamp'
+        ]
+
+        for column in timestamp_columns:
+            if hasattr(df, 'columns') and column in df.columns:
+                value = df[column].iloc[-1]
+                formatted = self._format_timestamp(value)
+                if formatted is not None:
+                    return formatted
+
+        if hasattr(df, 'index') and len(df.index) > 0:
+            return self._format_timestamp(df.index[-1])
+
+        return None
+
+    @staticmethod
+    def _format_timestamp(value) -> Optional[str]:
+        """Format timestamp-like values consistently as ISO strings."""
+        if value is None:
+            return None
+
+        if isinstance(value, np.datetime64):
+            try:
+                value = value.astype('datetime64[us]').tolist()
+            except (TypeError, ValueError, OverflowError):
+                return str(value)
+
+        if hasattr(value, 'isoformat'):
+            return value.isoformat()
+
+        return str(value)
     
     def get_model_info(self) -> Dict[str, any]:
         """
