@@ -134,6 +134,8 @@ CoinScribe is configured to deploy to Netlify automatically via GitHub Actions.
    - `NETLIFY_AUTH_TOKEN` - Your Netlify personal access token
    - `NETLIFY_SITE_ID` - Your Netlify site ID
 
+**Need help?** See [SECRETS_SETUP.md](./SECRETS_SETUP.md) for a detailed step-by-step guide on obtaining and configuring these secrets.
+
 #### Automatic Deployment
 
 The project uses GitHub Actions for CI/CD:
@@ -226,7 +228,20 @@ Optimized build settings with:
 ## 📝 Documentation
 
 For more detailed information, see:
+
+### Getting Started
+- [README.md](./README.md) - This file (quick start and overview)
+- [scripts/quickstart.sh](./scripts/quickstart.sh) - Automated setup script
+
+### Build & Deploy
+- [BUILD_GUIDE.md](./BUILD_GUIDE.md) - Detailed build instructions and optimization
 - [DEPLOYMENT.md](./DEPLOYMENT.md) - Comprehensive deployment guide
+- [SECRETS_SETUP.md](./SECRETS_SETUP.md) - Step-by-step guide for GitHub secrets
+- [PUBLISH_SUMMARY.md](./PUBLISH_SUMMARY.md) - Complete build and publish overview
+
+### Development
+- [.github/CICD.md](./.github/CICD.md) - CI/CD pipeline documentation
+- [.env.example](./.env.example) - Environment variables example
 - [IMPROVEMENTS_SUMMARY.md](./IMPROVEMENTS_SUMMARY.md) - Performance improvements
 - [PERFORMANCE_ANALYSIS.md](./PERFORMANCE_ANALYSIS.md) - Performance analysis
 
