@@ -1,0 +1,115 @@
+name: Auto Tag on PR Merge
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  autotag:
+    name: Bump and push tag (PR merges only)
+    runs-on: ubuntu-latest
+    # Only proceed when the head commit message indicates a PR merge
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' &&
+       contains(github.event.head_commit.message, 'Merge pull request'))
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed to read existing tags
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          set -euo pipefail
+          git fetch --tags --force
+          LATEST_TAG="$(git tag --list 'v*' --sort=-v:refname | head -n1 || true)"
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="v0.0.0"
+          fi
+          echo "latest=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Decide bump level
+        id: bump
+        run: |
+          set -euo pipefail
+
+          # Determine range: from last tag to HEAD. If last tag is v0.0.0, log from root.
+          LAST="${{ steps.get_tag.outputs.latest }}"
+          if [ "$LAST" = "v0.0.0" ]; then
+            COMMITS="$(git log --format=%B)"
+          else
+            COMMITS="$(git log --format=%B $(git rev-list -n 1 "$LAST")..HEAD || true)"
+          fi
+
+          BUMP="patch"
+          if echo "$COMMITS" | grep -qi '\[skip-bump\]'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if echo "$COMMITS" | grep -qi '\[bump:major\]'; then BUMP="major"; fi
+          if echo "$COMMITS" | grep -qi '\[bump:minor\]'; then BUMP="minor"; fi
+          if echo "$COMMITS" | grep -qi '\[bump:patch\]'; then BUMP="patch"; fi
+
+          echo "level=$BUMP" >> "$GITHUB_OUTPUT"
+
+      - name: Compute next version
+        if: steps.bump.outputs.skip != 'true'
+        id: next
+        env:
+          LATEST: ${{ steps.get_tag.outputs.latest }}
+          LEVEL: ${{ steps.bump.outputs.level }}
+        run: |
+          set -euo pipefail
+
+          parse() {
+            V="${1#v}"
+            IFS='.' read -r MA MI PA <<< "$V"
+            echo "$MA" "$MI" "$PA"
+          }
+
+          read MA MI PA < <(parse "$LATEST")
+
+          case "$LEVEL" in
+            major) MA=$((MA+1)); MI=0; PA=0;;
+            minor) MI=$((MI+1)); PA=0;;
+            patch) PA=$((PA+1));;
+          esac
+
+          NEXT="v${MA}.${MI}.${PA}"
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag
+        if: steps.bump.outputs.skip != 'true'
+        env:
+          NEXT: ${{ steps.next.outputs.next }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Avoid re-tag if already exists due to concurrent runs
+          if git rev-parse -q --verify "refs/tags/${NEXT}" >/dev/null; then
+            echo "Tag ${NEXT} already exists, skipping."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${NEXT}" -m "Release ${NEXT}"
+          git push origin "refs/tags/${NEXT}"
+          echo "Pushed ${NEXT}"
+
+      - name: Create GitHub Release
+        if: steps.bump.outputs.skip != 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.next.outputs.next }}
+          name: Release ${{ steps.next.outputs.next }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
