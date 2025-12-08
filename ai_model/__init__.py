@@ -15,7 +15,25 @@ The package includes:
 __version__ = "0.1.0"
 __author__ = "CoinScribe Team"
 
-from .models.inference.predictor import AIIndexPredictor
-from .api.endpoints import create_app
-
 __all__ = ['AIIndexPredictor', 'create_app']
+
+
+def __getattr__(name):
+    """
+    Lazily import heavy submodules only when needed.
+    
+    Importing torch/yfinance is expensive and breaks lightweight tooling
+    (e.g. docs tests) when those deps are unavailable.  Avoid importing
+    them at module import time and defer until the attribute is accessed.
+    """
+    if name == 'AIIndexPredictor':
+        from .models.inference.predictor import AIIndexPredictor
+        globals()[name] = AIIndexPredictor
+        return AIIndexPredictor
+    
+    if name == 'create_app':
+        from .api.endpoints import create_app
+        globals()[name] = create_app
+        return create_app
+    
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
