@@ -1,5 +1,11 @@
 # CoinScribe
 
+[![Build and Deploy](https://github.com/Longjon007/CoinScribe/actions/workflows/deploy.yml/badge.svg)](https://github.com/Longjon007/CoinScribe/actions/workflows/deploy.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://react.dev/)
+
 CoinScribe is an all-in-one crypto tracker that shows you not just what the market is doing, but why. It goes beyond simple price charts by integrating a powerful AI engine that instantly reads, understands, and summarizes the latest news for any coin.
 
 ## 🚀 Quick Start
@@ -9,7 +15,25 @@ CoinScribe is an all-in-one crypto tracker that shows you not just what the mark
 - Node.js >= 18.0.0
 - npm (comes with Node.js)
 
-### Installation
+### Automated Setup (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/Longjon007/CoinScribe.git
+cd CoinScribe
+
+# Run the quickstart script
+./scripts/quickstart.sh
+```
+
+The quickstart script will:
+- ✅ Check all prerequisites
+- ✅ Install dependencies
+- ✅ Run quality checks (linting, type-checking)
+- ✅ Build the application
+- ✅ Run security audit
+
+### Manual Installation
 
 ```bash
 # Clone the repository
