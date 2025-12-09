@@ -5,11 +5,12 @@ API Endpoints for AI Index Prediction
 Flask-based REST API for interacting with the AI model.
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from typing import Dict
 import logging
 import traceback
+import os
 
 from ..models.inference.predictor import AIIndexPredictor
 from ..data.pipelines.data_loader import MarketDataLoader
@@ -29,7 +30,11 @@ def create_app(config_obj=None) -> Flask:
     Returns:
         Configured Flask app
     """
-    app = Flask(__name__)
+    # Initialize Flask with correct template and static folders
+    template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
+    static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
+
+    app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
     
     # Load configuration
     if config_obj is None:
@@ -59,6 +64,11 @@ def create_app(config_obj=None) -> Flask:
     
     # Define routes
     
+    @app.route('/')
+    def index():
+        """Serve the frontend application."""
+        return render_template('index.html')
+
     @app.route('/health', methods=['GET'])
     def health_check():
         """Health check endpoint."""

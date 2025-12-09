@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoinScribe AI | Investment Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-brain brand-icon"></i>
+                <span>CoinScribe</span>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item active" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-tab="predict">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>AI Predictor</span>
+                </li>
+                <li class="nav-item" data-tab="market">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>Market Data</span>
+                </li>
+                <li class="nav-item" data-tab="model">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <span>Model Info</span>
+                </li>
+            </ul>
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <span class="name">Guest User</span>
+                    <span class="status">Free Tier</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1 id="page-header">Market Overview</h1>
+                    <span class="date" id="current-date">October 24, 2023</span>
+                </div>
+                <div class="actions">
+                    <button class="icon-btn"><i class="fa-solid fa-bell"></i></button>
+                    <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+                </div>
+            </header>
+
+            <!-- Views -->
+            <div id="dashboard-view" class="view active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon btc"><i class="fa-brands fa-bitcoin"></i></div>
+                        <div class="stat-info">
+                            <h3>Bitcoin Index</h3>
+                            <p class="value" id="btc-index">--</p>
+                            <span class="trend up"><i class="fa-solid fa-arrow-up"></i> 2.4%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon eth"><i class="fa-brands fa-ethereum"></i></div>
+                        <div class="stat-info">
+                            <h3>Ethereum Index</h3>
+                            <p class="value" id="eth-index">--</p>
+                            <span class="trend down"><i class="fa-solid fa-arrow-down"></i> 0.8%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon ai"><i class="fa-solid fa-robot"></i></div>
+                        <div class="stat-info">
+                            <h3>AI Confidence</h3>
+                            <p class="value" id="ai-confidence">--</p>
+                            <span class="trend neutral"><i class="fa-solid fa-minus"></i> Stable</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container glass-panel">
+                    <div class="panel-header">
+                        <h2>AI Investment Indices Performance</h2>
+                        <div class="panel-actions">
+                            <button class="filter-btn active">1D</button>
+                            <button class="filter-btn">1W</button>
+                            <button class="filter-btn">1M</button>
+                        </div>
+                    </div>
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <div id="predict-view" class="view">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h2>Generate New Prediction</h2>
+                    </div>
+                    <div class="prediction-form">
+                        <div class="form-group">
+                            <label>Select Assets</label>
+                            <div class="asset-selector">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" checked value="BTC-USD">
+                                    <span class="checkmark">BTC-USD</span>
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" checked value="ETH-USD">
+                                    <span class="checkmark">ETH-USD</span>
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" value="SOL-USD">
+                                    <span class="checkmark">SOL-USD</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button id="run-prediction-btn" class="primary-btn">
+                            <i class="fa-solid fa-bolt"></i> Run Analysis
+                        </button>
+                    </div>
+                </div>
+
+                <div id="prediction-results" class="results-grid hidden">
+                    <!-- Results injected here -->
+                </div>
+            </div>
+
+            <div id="market-view" class="view">
+                <div class="glass-panel">
+                    <h2>Live Market Data</h2>
+                    <div class="table-responsive">
+                        <table id="market-table">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Price</th>
+                                    <th>24h Change</th>
+                                    <th>Volume</th>
+                                    <th>Sentiment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="model-view" class="view">
+                <div class="glass-panel">
+                    <h2>Model Architecture & Status</h2>
+                    <div id="model-info-content" class="code-block">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
