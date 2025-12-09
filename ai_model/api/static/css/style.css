@@ -346,5 +346,92 @@ td {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    background: var(--bg-panel);
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.badge-pro {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    color: #000;
+    font-size: 0.6rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 800;
+    margin-left: auto;
+}
+
+.premium-lock {
+    text-align: center;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.premium-lock i {
+    color: var(--accent-btc);
+}
+
+.plan-card {
+    border: 1px solid var(--primary);
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.plan-card .price {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 1rem 0;
+}
+
+.plan-card .price span {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.features li {
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+.features i {
+    color: var(--success);
+    margin-right: 0.5rem;
 }

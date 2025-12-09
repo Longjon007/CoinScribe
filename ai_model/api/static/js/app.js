@@ -23,10 +23,107 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update Header
             pageHeader.textContent = item.querySelector('span').textContent;
 
+            // Handle Whale View (Premium Gate)
+            if(tabName === 'whale') {
+                checkPremiumAccess();
+            }
+
             // Load specific data if needed
             if(tabName === 'market') loadMarketData();
             if(tabName === 'model') loadModelInfo();
         });
+    });
+
+    // Wallet Connection Logic
+    const walletText = document.getElementById('user-wallet');
+    const tierText = document.getElementById('user-tier');
+    let userAddress = null;
+    let isPremium = false;
+
+    // Add click event to wallet text if not connected
+    walletText.parentElement.parentElement.addEventListener('click', connectWallet);
+
+    async function connectWallet() {
+        if (typeof window.ethereum !== 'undefined') {
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const accounts = await provider.send("eth_requestAccounts", []);
+                userAddress = accounts[0];
+
+                walletText.textContent = `${userAddress.substring(0,6)}...${userAddress.substring(38)}`;
+
+                // Mock checking if user holds Premium NFT
+                // In production: await contract.balanceOf(userAddress)
+                checkPremiumStatus(userAddress);
+
+            } catch (error) {
+                console.error("User denied account access", error);
+            }
+        } else {
+            alert("Please install MetaMask!");
+        }
+    }
+
+    function checkPremiumStatus(address) {
+        // Mock logic: addresses starting with even number are premium
+        // This simulates a smart contract call
+        const lastChar = address.slice(-1);
+        if (!isNaN(lastChar) && parseInt(lastChar) % 2 === 0) {
+            isPremium = true;
+            tierText.textContent = "Whale Tier";
+            tierText.style.color = "#FFD700";
+        } else {
+            isPremium = false;
+            tierText.textContent = "Free Tier";
+        }
+
+        // Refresh view if on whale tab
+        if (document.querySelector('[data-tab="whale"]').classList.contains('active')) {
+            checkPremiumAccess();
+        }
+    }
+
+    function checkPremiumAccess() {
+        const lock = document.getElementById('whale-lock');
+        const content = document.getElementById('whale-content');
+
+        if (isPremium) {
+            lock.classList.add('hidden');
+            content.classList.remove('hidden');
+        } else {
+            lock.classList.remove('hidden');
+            content.classList.add('hidden');
+        }
+    }
+
+    // Subscription Modal Logic
+    const modal = document.getElementById('sub-modal');
+    const subscribeBtn = document.getElementById('subscribe-btn');
+    const closeBtn = document.querySelector('.close-modal');
+    const confirmSubBtn = document.getElementById('confirm-sub');
+
+    if(subscribeBtn) {
+        subscribeBtn.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+    }
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    confirmSubBtn.addEventListener('click', () => {
+        // Mock Payment Flow
+        confirmSubBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+        setTimeout(() => {
+            isPremium = true;
+            tierText.textContent = "Whale Tier";
+            tierText.style.color = "#FFD700";
+            modal.classList.add('hidden');
+            checkPremiumAccess();
+            alert("Upgrade Successful! Welcome to Whale Tier.");
+            confirmSubBtn.innerHTML = 'Pay with Crypto';
+        }, 1500);
     });
 
     // Initialize Chart

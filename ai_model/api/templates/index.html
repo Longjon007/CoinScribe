@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -26,6 +27,11 @@
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                     <span>AI Predictor</span>
                 </li>
+                <li class="nav-item" data-tab="whale">
+                    <i class="fa-solid fa-water"></i>
+                    <span>Whale Analysis</span>
+                    <span class="badge-pro">PRO</span>
+                </li>
                 <li class="nav-item" data-tab="market">
                     <i class="fa-solid fa-globe"></i>
                     <span>Market Data</span>
@@ -40,8 +46,8 @@
                     <i class="fa-solid fa-user"></i>
                 </div>
                 <div class="user-info">
-                    <span class="name">Guest User</span>
-                    <span class="status">Free Tier</span>
+                    <span class="name" id="user-wallet">Connect Wallet</span>
+                    <span class="status" id="user-tier">Guest</span>
                 </div>
             </div>
         </nav>
@@ -167,8 +173,78 @@
                 </div>
             </div>
 
+            <div id="whale-view" class="view">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h2>🐳 Whale Movement Analysis</h2>
+                        <span class="trend up">Live Feed</span>
+                    </div>
+                    <div class="premium-lock hidden" id="whale-lock">
+                        <i class="fa-solid fa-lock fa-3x"></i>
+                        <h3>Premium Feature</h3>
+                        <p>Unlock real-time on-chain analysis and whale alerts.</p>
+                        <button class="primary-btn" id="subscribe-btn">
+                            Upgrade to Pro
+                        </button>
+                    </div>
+                    <div class="whale-content" id="whale-content">
+                        <!-- Secured Content -->
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Wallet</th>
+                                        <th>Action</th>
+                                        <th>Amount</th>
+                                        <th>Impact Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2 mins ago</td>
+                                        <td>0x7a...9f2</td>
+                                        <td class="trend down">Sent to Binance</td>
+                                        <td>5,000 BTC</td>
+                                        <td class="trend down">High Bearish</td>
+                                    </tr>
+                                    <tr>
+                                        <td>15 mins ago</td>
+                                        <td>0x3b...1c4</td>
+                                        <td class="trend up">Withdrew from Coinbase</td>
+                                        <td>12,000 ETH</td>
+                                        <td class="trend up">High Bullish</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
+
+    <!-- Subscription Modal -->
+    <div id="sub-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <span class="close-modal">&times;</span>
+            <h2>Upgrade to CoinScribe Pro</h2>
+            <div class="plans">
+                <div class="plan-card">
+                    <h3>Monthly</h3>
+                    <div class="price">0.05 ETH <span>/mo</span></div>
+                    <ul class="features">
+                        <li><i class="fa-solid fa-check"></i> Real-time Whale Alerts</li>
+                        <li><i class="fa-solid fa-check"></i> Unlimited AI Predictions</li>
+                        <li><i class="fa-solid fa-check"></i> Discord Bot Access</li>
+                    </ul>
+                    <button class="primary-btn" id="confirm-sub">Pay with Crypto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/static/js/app.js"></script>
 </body>
 </html>
