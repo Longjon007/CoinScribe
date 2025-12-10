@@ -17,6 +17,9 @@ flask-cors>=4.0.0
 pyyaml>=6.0
 python-dotenv>=1.0.0
 
+# Database (optional, for Supabase integration)
+supabase>=2.0.0
+
 # Visualization (optional, for analysis)
 matplotlib>=3.7.0
 seaborn>=0.12.0
