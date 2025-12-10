@@ -85,6 +85,9 @@ CREATE TABLE IF NOT EXISTS public.coin_price_history (
     -- Constraints
     CONSTRAINT positive_ohlc CHECK (open >= 0 AND high >= 0 AND low >= 0 AND close >= 0),
     CONSTRAINT valid_high_low CHECK (high >= low),
+    CONSTRAINT valid_open CHECK (open BETWEEN low AND high),
+    CONSTRAINT valid_close CHECK (close BETWEEN low AND high),
+    CONSTRAINT valid_rsi CHECK (rsi IS NULL OR (rsi >= 0 AND rsi <= 100)),
     CONSTRAINT positive_volume_history CHECK (volume >= 0),
     CONSTRAINT unique_coin_timestamp UNIQUE (coin_id, timestamp)
 );
@@ -111,7 +114,8 @@ CREATE TABLE IF NOT EXISTS public.coin_news (
     published_at TIMESTAMP WITH TIME ZONE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     
-    CONSTRAINT valid_news_sentiment CHECK (sentiment_score >= -1.0 AND sentiment_score <= 1.0)
+    CONSTRAINT valid_news_sentiment CHECK (sentiment_score IS NULL OR (sentiment_score >= -1.0 AND sentiment_score <= 1.0)),
+    CONSTRAINT valid_url CHECK (url IS NULL OR url ~ '^https?://.*')
 );
 
 -- Create indexes for news data
@@ -144,8 +148,14 @@ CREATE POLICY "Enable update for authenticated users only" ON public.coins
 CREATE POLICY "Enable insert for authenticated users only" ON public.coin_price_history
     FOR INSERT WITH CHECK (auth.role() = 'authenticated' OR auth.role() = 'service_role');
 
+CREATE POLICY "Enable update for authenticated users only" ON public.coin_price_history
+    FOR UPDATE USING (auth.role() = 'authenticated' OR auth.role() = 'service_role');
+
 CREATE POLICY "Enable insert for authenticated users only" ON public.coin_news
     FOR INSERT WITH CHECK (auth.role() = 'authenticated' OR auth.role() = 'service_role');
+
+CREATE POLICY "Enable update for authenticated users only" ON public.coin_news
+    FOR UPDATE USING (auth.role() = 'authenticated' OR auth.role() = 'service_role');
 
 -- Create function to update last_updated timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
