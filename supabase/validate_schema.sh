@@ -3,11 +3,16 @@
 
 echo "Validating SQL migration syntax..."
 
+# Find the most recent migration file
+MIGRATION_FILE=$(find supabase/migrations -name "*.sql" -type f | sort -r | head -n 1)
+
 # Check if SQL file exists
-if [ ! -f "supabase/migrations/20251210210000_create_coins_schema.sql" ]; then
-    echo "Error: Migration file not found"
+if [ -z "$MIGRATION_FILE" ] || [ ! -f "$MIGRATION_FILE" ]; then
+    echo "Error: No migration file found in supabase/migrations/"
     exit 1
 fi
+
+echo "Validating migration: $MIGRATION_FILE"
 
 # Use pg_dump's SQL parser to validate syntax
 # We'll use psql with --dry-run equivalent check
@@ -17,25 +22,26 @@ echo "Checking SQL syntax with PostgreSQL parser..."
 # For now, we'll do basic syntax validation
 
 # Count CREATE TABLE statements
-tables=$(grep -c "^CREATE TABLE" supabase/migrations/20251210210000_create_coins_schema.sql)
+tables=$(grep -c "^CREATE TABLE" "$MIGRATION_FILE")
 echo "✓ Found $tables CREATE TABLE statements"
 
 # Count CREATE INDEX statements  
-indexes=$(grep -c "^CREATE INDEX" supabase/migrations/20251210210000_create_coins_schema.sql)
+indexes=$(grep -c "^CREATE INDEX" "$MIGRATION_FILE")
 echo "✓ Found $indexes CREATE INDEX statements"
 
 # Count CREATE POLICY statements
-policies=$(grep -c "^CREATE POLICY" supabase/migrations/20251210210000_create_coins_schema.sql)
+policies=$(grep -c "^CREATE POLICY" "$MIGRATION_FILE")
 echo "✓ Found $policies CREATE POLICY statements"
 
 # Validate all CREATE statements have matching semicolons
-creates=$(grep -c "^CREATE" supabase/migrations/20251210210000_create_coins_schema.sql)
+creates=$(grep -c "^CREATE" "$MIGRATION_FILE")
 echo "✓ Found $creates total CREATE statements"
 
 # Check for balanced parentheses
 if python3 -c "
 import re
-with open('supabase/migrations/20251210210000_create_coins_schema.sql', 'r') as f:
+import sys
+with open('$MIGRATION_FILE', 'r') as f:
     content = f.read()
     # Remove comments and strings
     content = re.sub(r'--.*', '', content)
@@ -44,7 +50,7 @@ with open('supabase/migrations/20251210210000_create_coins_schema.sql', 'r') as 
     close_parens = content.count(')')
     if open_parens != close_parens:
         print(f'Error: Unbalanced parentheses: {open_parens} open, {close_parens} close')
-        exit(1)
+        sys.exit(1)
     print(f'✓ Balanced parentheses: {open_parens} pairs')
 " 2>&1; then
     echo "Parentheses validation passed"
@@ -54,16 +60,16 @@ else
 fi
 
 # Validate UUID extension
-if grep -q "CREATE EXTENSION.*uuid-ossp" supabase/migrations/20251210210000_create_coins_schema.sql; then
+if grep -q "CREATE EXTENSION.*uuid-ossp" "$MIGRATION_FILE"; then
     echo "✓ UUID extension creation found"
 fi
 
 # Validate RLS is enabled
-rls_count=$(grep -c "ENABLE ROW LEVEL SECURITY" supabase/migrations/20251210210000_create_coins_schema.sql)
+rls_count=$(grep -c "ENABLE ROW LEVEL SECURITY" "$MIGRATION_FILE")
 echo "✓ RLS enabled on $rls_count tables"
 
 # Validate constraints
-constraints=$(grep -c "CONSTRAINT" supabase/migrations/20251210210000_create_coins_schema.sql)
+constraints=$(grep -c "CONSTRAINT" "$MIGRATION_FILE")
 echo "✓ Found $constraints constraint definitions"
 
 echo ""

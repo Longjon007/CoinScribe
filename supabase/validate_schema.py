@@ -6,16 +6,43 @@ Validate that the database schema aligns with the application's data requirement
 import yaml
 import re
 from pathlib import Path
+import glob
+import os
+
+def get_project_root():
+    """Get the project root directory (where supabase/ is located)."""
+    # Start from script's directory and go up until we find supabase/
+    current = Path(__file__).parent
+    while current != current.parent:
+        if (current / 'supabase').exists() and (current / 'ai_model').exists():
+            return current
+        current = current.parent
+    # If not found, return script's parent (assume we're in supabase/)
+    return Path(__file__).parent.parent
 
 def load_config():
     """Load the application configuration."""
-    config_path = Path("ai_model/config/config.yaml")
+    root = get_project_root()
+    config_path = root / "ai_model" / "config" / "config.yaml"
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
 
+def get_latest_migration():
+    """Get the most recent migration file."""
+    root = get_project_root()
+    migrations_dir = root / "supabase" / "migrations"
+    migration_files = list(migrations_dir.glob("*.sql"))
+    
+    if not migration_files:
+        raise FileNotFoundError("No migration files found in supabase/migrations/")
+    
+    # Sort by filename (which includes timestamp)
+    return sorted(migration_files)[-1]
+
 def check_schema_file():
     """Check that the schema file contains required tables and columns."""
-    schema_path = Path("supabase/migrations/20251210210000_create_coins_schema.sql")
+    schema_path = get_latest_migration()
+    print(f"Validating migration: {schema_path.name}")
     
     with open(schema_path, 'r') as f:
         schema_content = f.read()
@@ -101,7 +128,7 @@ def validate_config_alignment():
         'sentiment_score': 'sentiment_score'
     }
     
-    schema_path = Path("supabase/migrations/20251210210000_create_coins_schema.sql")
+    schema_path = get_latest_migration()
     with open(schema_path, 'r') as f:
         schema_content = f.read()
     
