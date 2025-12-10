@@ -29,7 +29,12 @@ from ai_model.utils.visualization import plot_training_history
 
 
 def parse_args():
-    """Parse command line arguments."""
+    """
+    Parse command line arguments.
+
+    Returns:
+        argparse.Namespace: Parsed command line arguments.
+    """
     parser = argparse.ArgumentParser(
         description='Train CoinScribe AI Index Model'
     )
