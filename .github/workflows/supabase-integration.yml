@@ -14,12 +14,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Supabase CLI
         run: |
           set -e
-          wget https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz
+          wget https://github.com/supabase/cli/releases/download/v1.200.3/supabase_linux_amd64.tar.gz
           tar -xf supabase_linux_amd64.tar.gz
           chmod +x supabase
           sudo mv supabase /usr/local/bin
@@ -29,6 +29,9 @@ jobs:
         run: |
           # Sync database migrations with the branch configurations
           supabase db push
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
 
       - name: Placeholder for Deployment Secrets
         run: |
@@ -37,3 +40,6 @@ jobs:
       - name: Test Database Connection
         run: |
           supabase db reset
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
