@@ -112,6 +112,28 @@ Comprehensive documentation is available in the `ai_model/docs/` directory:
 
 - **[Main Documentation](ai_model/docs/README.md)**: Complete guide to installation, training, and usage
 - **[API Documentation](ai_model/docs/API.md)**: Detailed REST API reference
+- **[Database Schema](supabase/README.md)**: Supabase database documentation
+
+## 🗄️ Database
+
+CoinScribe uses Supabase for data persistence:
+
+- **Schema**: See `supabase/README.md` for complete database documentation
+- **Migrations**: Database migrations are in `supabase/migrations/`
+- **Integration**: Example code in `supabase/database_integration.py`
+
+To set up the database:
+
+```bash
+# Install Supabase CLI
+# See .github/workflows/supabase-integration.yml for installation
+
+# Link to your Supabase project
+supabase link --project-ref your-project-ref
+
+# Push the database schema
+supabase db push
+```
 
 ### API Endpoints
 
