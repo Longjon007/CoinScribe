@@ -15,17 +15,21 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 
+# Constant for workflow file path
+WORKFLOW_FILE_PATH = Path(__file__).parent.parent / '.github/workflows/supabase-integration.yml'
+
+
 class TestWorkflowFileValidation:
     """Test GitHub Actions workflow file validation."""
     
     def test_workflow_file_exists(self):
         """Test that the Supabase integration workflow file exists."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         assert workflow_path.exists(), "Workflow file should exist"
     
     def test_workflow_file_valid_yaml(self):
         """Test that workflow file is valid YAML."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             try:
@@ -36,7 +40,7 @@ class TestWorkflowFileValidation:
     
     def test_workflow_structure(self):
         """Test that workflow has required structure."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)
@@ -49,7 +53,7 @@ class TestWorkflowFileValidation:
     
     def test_workflow_has_supabase_job(self):
         """Test that workflow includes Supabase setup job."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)
@@ -64,7 +68,7 @@ class TestWorkflowFileValidation:
     
     def test_workflow_triggers(self):
         """Test that workflow has appropriate triggers."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)
@@ -79,7 +83,7 @@ class TestSupabaseCommands:
     
     def test_workflow_has_supabase_cli_installation(self):
         """Test that workflow installs Supabase CLI."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             content = f.read()
@@ -91,7 +95,7 @@ class TestSupabaseCommands:
     
     def test_workflow_has_db_push_command(self):
         """Test that workflow includes 'supabase db push' command."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             content = f.read()
@@ -101,7 +105,7 @@ class TestSupabaseCommands:
     
     def test_workflow_has_db_reset_command(self):
         """Test that workflow includes 'supabase db reset' command."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             content = f.read()
@@ -153,7 +157,7 @@ class TestWorkflowSteps:
     
     def test_workflow_checkout_step(self):
         """Test that workflow has repository checkout step."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)
@@ -168,7 +172,7 @@ class TestWorkflowSteps:
     
     def test_workflow_uses_ubuntu(self):
         """Test that workflow runs on Ubuntu."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)
@@ -181,7 +185,7 @@ class TestWorkflowSteps:
     
     def test_workflow_has_multiple_steps(self):
         """Test that workflow has multiple steps."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)
@@ -198,7 +202,7 @@ class TestWorkflowSecurity:
     
     def test_workflow_mentions_secrets(self):
         """Test that workflow references proper secrets handling."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             content = f.read()
@@ -209,7 +213,7 @@ class TestWorkflowSecurity:
     
     def test_workflow_no_hardcoded_credentials(self):
         """Test that workflow doesn't contain hardcoded credentials."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             content = f.read()
@@ -241,7 +245,7 @@ class TestWorkflowSecurity:
     
     def test_workflow_commit_reference(self):
         """Test that workflow references the correct commit."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             content = f.read()
@@ -256,7 +260,7 @@ class TestCICD:
     
     def test_workflow_error_handling(self):
         """Test that workflow includes error handling."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             content = f.read()
@@ -269,7 +273,7 @@ class TestCICD:
     
     def test_workflow_name_descriptive(self):
         """Test that workflow has descriptive name."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)
@@ -309,7 +313,7 @@ class TestWorkflowBestPractices:
     
     def test_workflow_has_descriptive_step_names(self):
         """Test that workflow steps have descriptive names."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)
@@ -326,7 +330,7 @@ class TestWorkflowBestPractices:
     
     def test_workflow_version_pinning(self):
         """Test that workflow pins action versions."""
-        workflow_path = Path('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml')
+        workflow_path = WORKFLOW_FILE_PATH
         
         with open(workflow_path, 'r') as f:
             workflow_data = yaml.safe_load(f)

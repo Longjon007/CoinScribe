@@ -12,6 +12,7 @@ Tests security aspects including:
 import pytest
 import os
 import json
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 from ai_model.api.endpoints import create_app
 
@@ -31,10 +32,8 @@ class TestSecretsManagement:
         """Create test client."""
         return app.test_client()
     
-    def test_environment_variables_not_exposed(self, client):
+    def test_environment_variables_not_exposed(self, client, mock_config):
         """Test that sensitive environment variables are not exposed."""
-        app = create_app()
-        client = app.test_client()
         
         # Get config endpoint
         response = client.get('/api/config')
@@ -55,12 +54,10 @@ class TestSecretsManagement:
         for key in sensitive_keys:
             assert key not in config_data.upper(), f"Sensitive key {key} found in config"
     
-    def test_no_secrets_in_error_messages(self, client):
+    def test_no_secrets_in_error_messages(self, client, app):
         """Test that error messages don't leak secrets."""
-        app = create_app()
         app.predictor = MagicMock()
         app.data_loader = MagicMock()
-        client = app.test_client()
         
         # Simulate error with potential secret in environment
         with patch.dict(os.environ, {'SECRET_KEY': 'super_secret_123'}):
@@ -99,7 +96,8 @@ class TestSecretsManagement:
     def test_supabase_credentials_security(self):
         """Test Supabase credentials are handled securely."""
         # Ensure credentials are not hardcoded
-        with open('/home/runner/work/CoinScribe/CoinScribe/.github/workflows/supabase-integration.yml', 'r') as f:
+        workflow_path = Path(__file__).parent.parent / '.github/workflows/supabase-integration.yml'
+        with open(workflow_path, 'r') as f:
             workflow_content = f.read()
             
         # Should not contain hardcoded credentials
@@ -366,11 +364,9 @@ class TestDataPrivacy:
         """Create test client."""
         return app.test_client()
     
-    def test_error_messages_sanitized(self, client):
+    def test_error_messages_sanitized(self, client, app):
         """Test that error messages don't leak sensitive information."""
-        app = create_app()
         app.predictor = None
-        client = app.test_client()
         
         response = client.post('/api/predict/indices', json={
             'symbols': ['BTC-USD']
@@ -390,15 +386,13 @@ class TestDataPrivacy:
         for pattern in sensitive_patterns:
             assert pattern not in error_data.lower()
     
-    def test_model_path_not_exposed(self, client):
+    def test_model_path_not_exposed(self, client, app):
         """Test that internal model paths are not exposed."""
-        app = create_app()
         app.predictor = MagicMock()
         app.predictor.get_model_info.return_value = {
             'architecture': 'lstm',
             'input_features': 10
         }
-        client = app.test_client()
         
         response = client.get('/api/model/info')
         
@@ -410,9 +404,9 @@ class TestDataPrivacy:
 class TestCORSSecurity:
     """Test CORS security configuration."""
     
-    def test_cors_headers_present(self):
+    def test_cors_headers_present(self, mock_config):
         """Test that CORS headers are properly configured."""
-        app = create_app()
+        app = create_app(mock_config)
         client = app.test_client()
         
         response = client.get('/health', headers={
@@ -422,9 +416,9 @@ class TestCORSSecurity:
         assert response.status_code == 200
         # CORS should be configured (check done in integration tests)
     
-    def test_cors_preflight(self):
+    def test_cors_preflight(self, mock_config):
         """Test CORS preflight requests."""
-        app = create_app()
+        app = create_app(mock_config)
         client = app.test_client()
         
         # OPTIONS request (preflight)
