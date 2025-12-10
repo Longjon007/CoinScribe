@@ -25,7 +25,12 @@ from ai_model.utils.logger import setup_logger
 
 
 def parse_args():
-    """Parse command line arguments."""
+    """
+    Parse command line arguments.
+
+    Returns:
+        argparse.Namespace: Parsed command line arguments.
+    """
     parser = argparse.ArgumentParser(
         description='Run CoinScribe AI Model API Server'
     )

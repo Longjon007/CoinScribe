@@ -180,6 +180,42 @@ This interactive script demonstrates:
 - Displaying model information
 - Making predictions
 
+## 💻 Development
+
+### Code Structure
+
+The codebase is organized as follows:
+
+- `ai_model/`: Main package directory
+  - `api/`: API server and endpoints
+  - `config/`: Configuration management
+  - `data/`: Data loading and preprocessing pipelines
+  - `models/`: Neural network architecture and training logic
+  - `utils/`: Helper utilities (logging, visualization)
+- `tests/`: Test suite
+- `example_usage.py`: Interactive example script
+- `run_server.py`: API server entry point
+- `train_model.py`: Training script entry point
+
+### Documentation
+
+The codebase is fully documented with docstrings following Google Python Style Guide.
+Detailed documentation is available in the `ai_model/docs/` directory.
+
+### Running Tests
+
+To run the test suite:
+
+```bash
+pytest
+```
+
+To run with coverage report:
+
+```bash
+pytest --cov=ai_model tests/
+```
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

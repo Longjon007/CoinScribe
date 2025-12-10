@@ -1,4 +1,9 @@
-"""Visualization utilities for training and predictions."""
+"""
+Visualization utilities for training and predictions.
+
+This module contains functions to generate plots for training history,
+model predictions, and index comparisons.
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,6 +25,9 @@ def plot_training_history(
         val_losses: List of validation losses
         save_path: Optional path to save plot
         show: Whether to show plot
+
+    Returns:
+        None
     """
     plt.figure(figsize=(10, 6))
     
@@ -60,6 +68,9 @@ def plot_predictions(
         predicted: Predicted values
         save_path: Optional path to save plot
         show: Whether to show plot
+
+    Returns:
+        None
     """
     plt.figure(figsize=(12, 6))
     
@@ -104,6 +115,9 @@ def plot_indices_comparison(
         indices_data: Dictionary mapping index names to values
         save_path: Optional path to save plot
         show: Whether to show plot
+
+    Returns:
+        None
     """
     plt.figure(figsize=(14, 8))
     

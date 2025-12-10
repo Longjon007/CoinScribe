@@ -26,7 +26,12 @@ class Config:
         self._config = self._load_config()
     
     def _load_config(self) -> Dict[str, Any]:
-        """Load configuration from YAML file."""
+        """
+        Load configuration from YAML file.
+
+        Returns:
+            Dict[str, Any]: Configuration dictionary.
+        """
         with open(self.config_path, 'r') as f:
             return yaml.safe_load(f)
     
@@ -72,22 +77,42 @@ class Config:
     
     @property
     def model(self) -> Dict[str, Any]:
-        """Get model configuration."""
+        """
+        Get model configuration.
+
+        Returns:
+            Dict[str, Any]: Model configuration dictionary.
+        """
         return self._config.get('model', {})
     
     @property
     def training(self) -> Dict[str, Any]:
-        """Get training configuration."""
+        """
+        Get training configuration.
+
+        Returns:
+            Dict[str, Any]: Training configuration dictionary.
+        """
         return self._config.get('training', {})
     
     @property
     def data(self) -> Dict[str, Any]:
-        """Get data configuration."""
+        """
+        Get data configuration.
+
+        Returns:
+            Dict[str, Any]: Data configuration dictionary.
+        """
         return self._config.get('data', {})
     
     @property
     def api(self) -> Dict[str, Any]:
-        """Get API configuration."""
+        """
+        Get API configuration.
+
+        Returns:
+            Dict[str, Any]: API configuration dictionary.
+        """
         return self._config.get('api', {})
 
 

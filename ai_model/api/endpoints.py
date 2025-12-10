@@ -61,7 +61,12 @@ def create_app(config_obj=None) -> Flask:
     
     @app.route('/health', methods=['GET'])
     def health_check():
-        """Health check endpoint."""
+        """
+        Health check endpoint.
+
+        Returns:
+            tuple: JSON response and status code.
+        """
         return jsonify({
             'status': 'healthy',
             'model_loaded': app.predictor is not None,
@@ -70,7 +75,12 @@ def create_app(config_obj=None) -> Flask:
     
     @app.route('/api/model/info', methods=['GET'])
     def model_info():
-        """Get model information."""
+        """
+        Get model information.
+
+        Returns:
+            tuple: JSON response with model info and status code.
+        """
         try:
             if app.predictor is None:
                 return jsonify({
@@ -99,7 +109,10 @@ def create_app(config_obj=None) -> Flask:
             "interval": "1h"  // Optional
         }
         
-        Response:
+        Returns:
+            tuple: JSON response with predictions and status code.
+
+        Response example:
         {
             "indices": [0.75, 0.82, ...],
             "index_names": ["Index_1", "Index_2", ...],
@@ -146,7 +159,10 @@ def create_app(config_obj=None) -> Flask:
             "interval": "1h"
         }
         
-        Response:
+        Returns:
+            tuple: JSON response with market data and status code.
+
+        Response example:
         {
             "data": [...],
             "count": 100,
@@ -200,7 +216,10 @@ def create_app(config_obj=None) -> Flask:
         """
         List available AI indices.
         
-        Response:
+        Returns:
+            tuple: JSON response with indices list and status code.
+
+        Response example:
         {
             "indices": [
                 {"name": "Index_1", "description": "..."},
@@ -235,7 +254,10 @@ def create_app(config_obj=None) -> Flask:
         """
         Get current API configuration (non-sensitive parts).
         
-        Response:
+        Returns:
+            tuple: JSON response with configuration and status code.
+
+        Response example:
         {
             "model": {...},
             "data": {...},
@@ -268,14 +290,30 @@ def create_app(config_obj=None) -> Flask:
     
     @app.errorhandler(404)
     def not_found(error):
-        """Handle 404 errors."""
+        """
+        Handle 404 errors.
+
+        Args:
+            error: Error description.
+
+        Returns:
+            tuple: JSON response and status code.
+        """
         return jsonify({
             'error': 'Endpoint not found'
         }), 404
     
     @app.errorhandler(500)
     def internal_error(error):
-        """Handle 500 errors."""
+        """
+        Handle 500 errors.
+
+        Args:
+            error: Error description.
+
+        Returns:
+            tuple: JSON response and status code.
+        """
         return jsonify({
             'error': 'Internal server error'
         }), 500

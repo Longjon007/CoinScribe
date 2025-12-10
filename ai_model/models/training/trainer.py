@@ -234,6 +234,9 @@ class ModelTrainer:
         
         Args:
             filename: Name of checkpoint file
+
+        Returns:
+            None
         """
         checkpoint_path = self.checkpoint_dir / filename
         
@@ -253,6 +256,9 @@ class ModelTrainer:
         
         Args:
             filename: Name of checkpoint file
+
+        Returns:
+            None
         """
         checkpoint_path = self.checkpoint_dir / filename
         
@@ -270,7 +276,12 @@ class ModelTrainer:
         self.best_loss = checkpoint['best_loss']
     
     def save_training_history(self):
-        """Save training history to JSON file."""
+        """
+        Save training history to JSON file.
+
+        Returns:
+            None
+        """
         history = {
             'train_losses': self.train_losses,
             'val_losses': self.val_losses,

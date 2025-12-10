@@ -1,4 +1,9 @@
-"""Logging utilities."""
+"""
+Logging utilities for the CoinScribe AI application.
+
+This module provides functions to configure and retrieve loggers
+for consistent logging across the application.
+"""
 
 import logging
 import sys
