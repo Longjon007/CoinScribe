@@ -5,13 +5,22 @@ AI Index Predictor
 Handles inference and prediction using trained AI models.
 """
 
-import torch
-import numpy as np
-from typing import Dict, List, Optional
-from pathlib import Path
-import logging
+from __future__ import annotations
 
-from ..training.model_architecture import AIIndexModel
+import logging
+from pathlib import Path
+from typing import Dict, List, Optional
+
+import numpy as np
+
+try:
+    import torch  # type: ignore
+except ModuleNotFoundError as exc:  # pragma: no cover - handled gracefully
+    torch = None  # type: ignore
+    _TORCH_IMPORT_ERROR = exc
+else:  # pragma: no cover - import success path
+    _TORCH_IMPORT_ERROR = None
+
 from ...data.pipelines.preprocessor import DataPreprocessor
 
 logging.basicConfig(level=logging.INFO)
@@ -35,6 +44,13 @@ class AIIndexPredictor:
             config: Model configuration
             device: Device to run inference on
         """
+        if torch is None:
+            raise ImportError(
+                "PyTorch is required for AIIndexPredictor but is not installed. "
+                "Install it by running `pip install torch --index-url "
+                "https://download.pytorch.org/whl/cpu`."
+            ) from _TORCH_IMPORT_ERROR
+
         self.config = config
         self.model_path = Path(model_path)
         
@@ -53,13 +69,14 @@ class AIIndexPredictor:
         
         logger.info(f"Predictor initialized on {self.device}")
     
-    def _load_model(self) -> AIIndexModel:
+    def _load_model(self):
         """
         Load trained model from checkpoint.
         
         Returns:
             Loaded model
         """
+        from ..training.model_architecture import AIIndexModel
         if not self.model_path.exists():
             logger.warning(f"Model checkpoint not found at {self.model_path}")
             logger.warning("Initializing new model (untrained)")
@@ -161,11 +178,13 @@ class AIIndexPredictor:
         predictions = self.predict(input_data)
         
         # Format output
+        timestamp = self._extract_timestamp(df)
+
         result = {
             'indices': predictions[0].tolist(),
             'index_names': [f"Index_{i+1}" for i in range(len(predictions[0]))],
             'confidence': self._calculate_confidence(predictions[0]),
-            'timestamp': df.index[-1] if hasattr(df, 'index') else None
+            'timestamp': timestamp
         }
         
         return result
@@ -217,6 +236,45 @@ class AIIndexPredictor:
         confidence = 1.0 / (1.0 + variance)
         
         return float(np.clip(confidence, 0, 1))
+
+    def _extract_timestamp(self, df) -> Optional[str]:
+        """
+        Extract the most relevant timestamp value from the provided dataframe.
+        Prefers explicit time columns and falls back to the dataframe index.
+        """
+        timestamp_columns = [
+            'Datetime', 'datetime', 'Date', 'date',
+            'timestamp', 'Timestamp'
+        ]
+
+        for column in timestamp_columns:
+            if hasattr(df, 'columns') and column in df.columns:
+                value = df[column].iloc[-1]
+                formatted = self._format_timestamp(value)
+                if formatted is not None:
+                    return formatted
+
+        if hasattr(df, 'index') and len(df.index) > 0:
+            return self._format_timestamp(df.index[-1])
+
+        return None
+
+    @staticmethod
+    def _format_timestamp(value) -> Optional[str]:
+        """Format timestamp-like values consistently as ISO strings."""
+        if value is None:
+            return None
+
+        if isinstance(value, np.datetime64):
+            try:
+                value = value.astype('datetime64[us]').tolist()
+            except (TypeError, ValueError, OverflowError):
+                return str(value)
+
+        if hasattr(value, 'isoformat'):
+            return value.isoformat()
+
+        return str(value)
     
     def get_model_info(self) -> Dict[str, any]:
         """
