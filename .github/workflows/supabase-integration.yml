@@ -4,15 +4,15 @@ name: Supabase Integration
 
 on:
   push:
-    branches:
+    branches: 
       - "*" # Trigger on all branches (customize as necessary)
 
 jobs:
-  setup-database:
+  setup-database: 
     name: Setup Supabase Database
     runs-on: ubuntu-latest
 
-    steps:
+    steps: 
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -24,6 +24,11 @@ jobs:
           chmod +x supabase
           sudo mv supabase /usr/local/bin
           supabase --version
+
+      - name: Link Supabase Project
+        run: supabase link --project-ref $SUPABASE_PROJECT_REF
+        env: 
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
 
       - name: Sync branch configurations (cf5645f086b50e1e71fba0b7a84debc46698c2af)
         run: |
