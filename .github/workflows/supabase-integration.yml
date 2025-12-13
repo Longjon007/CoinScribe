@@ -29,11 +29,14 @@ jobs:
         run: supabase link --project-ref $SUPABASE_PROJECT_REF
         env: 
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Sync branch configurations (cf5645f086b50e1e71fba0b7a84debc46698c2af)
         run: |
           # Sync database migrations with the branch configurations
           supabase db push
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Placeholder for Deployment Secrets
         run: |
@@ -42,3 +45,5 @@ jobs:
       - name: Test Database Connection
         run: |
           supabase db reset
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
