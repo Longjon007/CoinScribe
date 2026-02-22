@@ -16,6 +16,16 @@ from ..config import config
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Static indices data - pre-computed once to avoid overhead on every request
+_STATIC_INDICES = [
+    {
+        'name': f'Index_{i+1}',
+        'description': f'AI-generated investment index {i+1}',
+        'type': 'composite'
+    }
+    for i in range(10)
+]
+
 try:
     from ..models.inference.predictor import AIIndexPredictor
 except Exception as exc:  # pragma: no cover - import-time failures handled
@@ -242,19 +252,10 @@ def create_app(config_obj=None) -> Flask:
         }
         """
         try:
-            # This is a placeholder - in production, this would list actual indices
-            indices = [
-                {
-                    'name': f'Index_{i+1}',
-                    'description': f'AI-generated investment index {i+1}',
-                    'type': 'composite'
-                }
-                for i in range(10)
-            ]
-            
+            # Use pre-computed static indices
             return jsonify({
-                'indices': indices,
-                'count': len(indices)
+                'indices': _STATIC_INDICES,
+                'count': len(_STATIC_INDICES)
             }), 200
             
         except Exception as e:
