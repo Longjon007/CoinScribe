@@ -5,7 +5,6 @@ Model Training Module
 Handles training, validation, and checkpointing of the AI Index Model.
 """
 
-import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
