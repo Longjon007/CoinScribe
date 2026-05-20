@@ -115,10 +115,11 @@ def create_app(config_obj=None) -> Flask:
             
         except Exception as e:
             logger.error(f"Error getting model info: {str(e)}")
-            return jsonify({
-                'error': str(e),
-                'traceback': traceback.format_exc()
-            }), 500
+            logger.error(traceback.format_exc())
+            response = {'error': str(e)}
+            if config_obj.get('api.debug', False):
+                response['traceback'] = traceback.format_exc()
+            return jsonify(response), 500
     
     @app.route('/api/predict/indices', methods=['POST'])
     def predict_indices():
@@ -162,10 +163,10 @@ def create_app(config_obj=None) -> Flask:
         except Exception as e:
             logger.error(f"Error making prediction: {str(e)}")
             logger.error(traceback.format_exc())
-            return jsonify({
-                'error': str(e),
-                'traceback': traceback.format_exc()
-            }), 500
+            response = {'error': str(e)}
+            if config_obj.get('api.debug', False):
+                response['traceback'] = traceback.format_exc()
+            return jsonify(response), 500
     
     @app.route('/api/data/fetch', methods=['POST'])
     def fetch_market_data():
@@ -223,10 +224,11 @@ def create_app(config_obj=None) -> Flask:
             
         except Exception as e:
             logger.error(f"Error fetching data: {str(e)}")
-            return jsonify({
-                'error': str(e),
-                'traceback': traceback.format_exc()
-            }), 500
+            logger.error(traceback.format_exc())
+            response = {'error': str(e)}
+            if config_obj.get('api.debug', False):
+                response['traceback'] = traceback.format_exc()
+            return jsonify(response), 500
     
     @app.route('/api/indices/list', methods=['GET'])
     def list_indices():
