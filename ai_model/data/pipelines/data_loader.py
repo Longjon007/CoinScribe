@@ -8,8 +8,7 @@ Loads historical market data from various sources for training the AI model.
 import yfinance as yf
 import pandas as pd
 import numpy as np
-from typing import List, Dict, Optional, Tuple
-from datetime import datetime, timedelta
+from typing import List, Dict, Optional
 import logging
 
 logging.basicConfig(level=logging.INFO)
